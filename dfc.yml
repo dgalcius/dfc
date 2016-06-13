@@ -1,0 +1,35 @@
+dvipsdefault:           dvips
+dvips:
+- vtex 2010: 		vtex 2010 dvi_ps
+- ecrc 2010: 		ecrc 2010 dvi_ps 
+
+pspdf:     ps2pdf
+pdfview:   acroread
+colorred:  color push rgb 1 0 0 
+colorblue: color push rgb 0 1 1
+psheader:  /DFCBegin{gsave /Difference .setblendmode}def /DFCEnd{grestore}def 
+filesdb:   /media/xdisk_ro/files_db
+
+# layers names
+layers: 
+- artifact.grid
+- artifact.header
+- artifact.footer
+- artifact.idline
+- artifact.cropmarks
+- artifact.dimensions
+
+# <begin-prefix><layer-name><begin-postfix>
+#   <end-prefix><layer-name><end-postfix>
+#
+layertags:
+- begin-prefix : 'vtex:bmc.'
+  begin-postfix: ''
+  end-prefix   : 'vtex:emc.' 
+  end-postfix  : ''
+- begin-prefix : 'vtex:'
+  begin-postfix: '.begin'
+  end-prefix   : 'vtex:'
+  end-postfix  : '.end'
+
+
