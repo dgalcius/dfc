@@ -150,11 +150,11 @@ contents1.each{|op|
  end
 }
 
-dviformat 	= runtimeinfo['format']
+dviformat = runtimeinfo['format']
 dvidistribution = runtimeinfo['distribution']
 dvipublisher    = runtimeinfo['publisher']
-dviproject 	= runtimeinfo['project']
-dvims 		= runtimeinfo['manuscript']
+dviproject	= runtimeinfo['project']
+dvims = runtimeinfo['manuscript']
 dvidocstage 	= runtimeinfo['docstage']
 
 log.puts "Runtimeinfo:"
@@ -185,25 +185,16 @@ log.puts "File2 in: #{filein2}"
 log.puts "File  out: #{fileout}"
 
 
-layers = Hash.new()
-  layers[:begin] = Array.new()
-  layers[:end]  = Array.new()
-settings['layers'].each do |l|
-  settings['layertags'].each do |t|
-   b = t['begin-prefix'] + l + t['begin-postfix']
-   e = t['end-prefix'] + l + t['end-postfix']
-   layers[:begin] << b
-   layers[:end] << e
-  end 
-end
-
+layers = settings["layers"]
+layers_begin_list = layers.keys.map{|x| layers[x][0]}
+layers_end_list = layers.keys.map{|x| layers[x][1]}
 
 def iflayer?(contents, list)
  m = false
  list.each do |layer|
-    i = Regexp.new(/#{layer}/)
+   i = Regexp.new(/#{layer}/)
     if contents=~i 
-      m = true 
+      m = true
     end
  end
  return m
@@ -217,11 +208,11 @@ cont = Array.new()
 s = []
 contents2.each do |op|
  if op.class == Dvi::Opcode::XXX
-   if iflayer?(op.content,layers[:begin])
+   if iflayer?(op.content,layers_begin_list)
      s.push(1) 
      cont << Dvi::Opcode::Push.new()
    end
-   if iflayer?(op.content,layers[:end])
+   if iflayer?(op.content,layers_end_list)
      s.pop
      op = Dvi::Opcode::Pop.new()
    end
@@ -231,6 +222,24 @@ end
 
 
 contents2 = cont.clone
+
+cont = []
+s = []
+contents1.each do |op|
+ if op.class == Dvi::Opcode::XXX
+   if iflayer?(op.content,layers_begin_list)
+     s.push(1) 
+     cont << Dvi::Opcode::Push.new()
+   end
+   if iflayer?(op.content,layers_end_list)
+     s.pop
+     op = Dvi::Opcode::Pop.new()
+   end
+ end 
+ cont << op if s.empty?
+end
+contents1 = cont.clone
+
 end
 
 

@@ -1,8 +1,7 @@
-dvipsdefault:           dvips
+dvipsdefault: dvips
 dvips:
-- vtex 2010: 		vtex 2010 dvi_ps
-- ecrc 2010: 		ecrc 2010 dvi_ps 
-
+  - vtex 2010: vtex 2010 dvi_ps
+  - vtex 2016: vtex 2016 dvi_ps
 pspdf:     ps2pdf
 pdfview:   acroread
 colorred:  color push rgb 1 0 0 
@@ -12,24 +11,35 @@ filesdb:   /media/xdisk_ro/files_db
 
 # layers names
 layers: 
-- artifact.grid
-- artifact.header
-- artifact.footer
-- artifact.idline
-- artifact.cropmarks
-- artifact.dimensions
-
-# <begin-prefix><layer-name><begin-postfix>
-#   <end-prefix><layer-name><end-postfix>
-#
-layertags:
-- begin-prefix : 'vtex:bmc.'
-  begin-postfix: ''
-  end-prefix   : 'vtex:emc.' 
-  end-postfix  : ''
-- begin-prefix : 'vtex:'
-  begin-postfix: '.begin'
-  end-prefix   : 'vtex:'
-  end-postfix  : '.end'
+  artifact.grid:
+      - vtex:bmc.artifact.grid
+      - vtex:emc.artifact.grid
+  artifact.innerskel:
+      - vtex:bmc.artifact.innerskel
+      - vtex:emc.artifact.innerskel
+  artifact.idline:
+      - vtex:bmc.artifact.idline
+      - vtex:emc.artifact.idline
+  artifact.cropmarks:
+      - vtex:bmc.artifact.cropmarks
+      - vtex:emc.artifact.cropmarks
+  artifact.dimensions:
+      - vtex:bmc.artifact.dimensions
+      - vtex:emc.artifact.dimensions
+  artifact.watermark:
+      - vtex:bmc.artifact.watermark
+      - vtex:emc.artifact.watermark
+  artifact.colorfiguresstamp:
+      - vtex:bmc.artifact.colorfiguresstamp
+      - vtex:emc.artifact.colorfiguresstamp
+  artifact.rightsstamp:
+      - vtex:bmc.artifact.rightsstamp
+      - vtex:emc.artifact.rightsstamp
+  artifact.book-isbn:
+      - vtex:bmc.artifact.book-isbn
+      - vtex:emc.artifact.book-isbn
+  artifact.pii-aid:
+      - vtex:bmc.artifact.pii-aid
+      - vtex:emc.artifact.pii-aid
 
 
