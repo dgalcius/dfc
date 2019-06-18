@@ -1,4 +1,4 @@
-#! usr/bin/ruby 
+#!/usr/bin/env ruby
 
 require 'ostruct'
 require 'rubygems'
@@ -47,6 +47,10 @@ optparse = OptionParser.new do|opts|
    options[:filter] = false
    opts.on('-f', '--filter-layers', 'Remove layers before comparison' ) do
    options[:filter] = true
+   end
+   options[:sidebyside] = false
+   opts.on('-s', '--side-by-side', 'Set pages side by side' ) do
+   options[:sidebyside] = true
    end
    options[:outputallpages] = true
    opts.on('-p', '--output-diff-pages', 'Output pages that differ' ) do
@@ -150,11 +154,11 @@ contents1.each{|op|
  end
 }
 
-dviformat = runtimeinfo['format']
+dviformat       = runtimeinfo['format']
 dvidistribution = runtimeinfo['distribution']
 dvipublisher    = runtimeinfo['publisher']
 dviproject	= runtimeinfo['project']
-dvims = runtimeinfo['manuscript']
+dvims           = runtimeinfo['manuscript']
 dvidocstage 	= runtimeinfo['docstage']
 
 log.puts "Runtimeinfo:"
@@ -581,15 +585,12 @@ psheader = Dvi::Opcode::XXX.new("! #{dfcheader}", dfcheader.size + 2)
 dfcbegin = Dvi::Opcode::XXX.new("#{psdfcbegin}", psdfcbegin.size + 2)
 dfcend = Dvi::Opcode::XXX.new("#{psdfcend}", psdfcend.size + 2)
 
-
-
 if !options[:outputallpages]
   if diffs.empty?
    puts nodiff
    exit
   end
 end
-
 
 cnt = 0 # isvedamo puslapio skaitliukas
 out = []
