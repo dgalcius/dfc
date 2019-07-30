@@ -528,7 +528,7 @@ contents2.each{|op|
 
 
 
-contents2.reject!{|op| (op.class == Dvi::Opcode::XXX && ifremoveps?(op.content))}
+contents2.reject!{|op| (op.class == Dvi::Opcode::XXX && ifremoveps?(op.content))} if !options[:sidebyside]
 #contents2.each_with_index{|op,i|
 # if op.class == Dvi::Opcode::XXX
 #   contents2.delete_at(i)
