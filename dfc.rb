@@ -82,6 +82,7 @@ rescue OptionParser::InvalidOption => e
  exit 1
 end
 
+options[:outputallpages] = true if options[:sidebyside]
 
 
 ymlfile = File.join(File.dirname(__FILE__), options[:cfgfile])
@@ -359,23 +360,18 @@ cont2 = contents2.clone
 cont = Array.new
 
 
-  cont1.reject!{|op| (op.class == Dvi::Opcode::Pre || op.class == Dvi::Opcode::PostPost || op.class == Dvi::Opcode::Post)}
-
-
+cont1.reject!{|op| (op.class == Dvi::Opcode::Pre || op.class == Dvi::Opcode::PostPost || op.class == Dvi::Opcode::Post)}
 cont.clear
 cont1.reject!{|op| (op.class == Dvi::Opcode::XXX)} if options[:is]
-
-  cont2.reject!{|op| (op.class == Dvi::Opcode::Pre || op.class == Dvi::Opcode::PostPost || op.class == Dvi::Opcode::Post)}
-
+cont2.reject!{|op| (op.class == Dvi::Opcode::Pre || op.class == Dvi::Opcode::PostPost || op.class == Dvi::Opcode::Post)}
 cont.clear
-
 cont2.reject!{|op| (op.class == Dvi::Opcode::XXX)} if options[:is]
 
 
 
 
-  pages1 = Dvi.split_into_pages(cont1)
-  pages2 = Dvi.split_into_pages(cont2)
+pages1 = Dvi.split_into_pages(cont1)
+pages2 = Dvi.split_into_pages(cont2)
 
   n = [pages1.size,pages2.size].max
 
@@ -490,13 +486,7 @@ $leaveps << Regexp.new(/ps: currentpoint grestore moveto/)
 
 pspapersize = nil
 contents1.each{|op| pspapersize = op if  (op.class == Dvi::Opcode::XXX && op.content =~/papersize/)}
-
-contents1.reject!{|op| (op.class == Dvi::Opcode::XXX && ifremoveps?(op.content))}
-
-
-
-#Dvi.write(File.open(fileout, "wb"), contents1)
-
+contents1.reject!{|op| (op.class == Dvi::Opcode::XXX && ifremoveps?(op.content))} if !options[:sidebyside]
 
 
 contents2.each{|op|
