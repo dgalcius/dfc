@@ -153,6 +153,19 @@ contents1.each{|op|
   runtimeinfo[$1] = $2 if op.content =~ runtimeinforeg
  end
 }
+def calc_max_xpos(contents)
+  maxv = 0
+  maxh = 0
+  maxstackdepth = 0
+  totalpages = 0
+#  contents.each do |op|
+  #  end
+  maxv=41484288
+  maxh=26673152
+  return maxh, maxv
+end
+
+max_xpos, max_ypos = calc_max_xpos(contents1) if options[:sidebyside]
 
 dviformat       = runtimeinfo['format']
 dvidistribution = runtimeinfo['distribution']
@@ -585,6 +598,13 @@ psheader = Dvi::Opcode::XXX.new("! #{dfcheader}", dfcheader.size + 2)
 dfcbegin = Dvi::Opcode::XXX.new("#{psdfcbegin}", psdfcbegin.size + 2)
 dfcend = Dvi::Opcode::XXX.new("#{psdfcend}", psdfcend.size + 2)
 
+onesp = 65536
+onein = (72.27 * onesp).floor
+
+move_max_xpos = Dvi::Opcode::Right.new(max_xpos) if options[:sidebyside]
+pspapersize_t="papersize=#{2 * max_xpos + 2 * onein }sp,#{max_ypos + 2 * onein }sp" if options[:sidebyside]
+pspapersize = Dvi::Opcode::XXX.new(pspapersize_t, pspapersize_t.size + 2) if options[:sidebyside]
+
 if !options[:outputallpages]
   if diffs.empty?
    puts nodiff
@@ -629,17 +649,18 @@ out << Dvi::Opcode::Pre.new(2, 25400000, 473628672, 1000, "Ruby DFC\ output #{ti
 # psheader = nil
 # pspapersize = nil
  out << stackpush
- out << colorred
+ out << colorred if !options[:sidebyside]
  a1.each{|op| out << op}
- out << colorend
+ out << colorend if !options[:sidebyside]
  out << stackpop
  ## BLUE OUTPUT
+ out << move_max_xpos if options[:sidebyside]
  out << stackpush
- out << dfcbegin
- out << colorblue
+ out << dfcbegin if !options[:sidebyside]
+ out << colorblue if !options[:sidebyside]
  a2.each{|op| out << op}
- out << dfcend
- out << colorend
+ out << dfcend if !options[:sidebyside]
+ out << colorend if !options[:sidebyside]
  out << stackpop
  out << Dvi::Opcode::Eop.new()
 }
